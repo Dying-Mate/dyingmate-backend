@@ -1,5 +1,6 @@
 package com.example.dyingmatebackend.will;
 
+import com.example.dyingmatebackend.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,4 +22,12 @@ public class Will {
 
     @Column(nullable = false)
     private String content;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
