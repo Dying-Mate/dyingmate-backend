@@ -14,22 +14,21 @@ public class MessageService {
     public final UserRepository userRepository;
 
     // 부고문자 저장
-    public void saveMessage(String email, MessageRequestDto messageRequestDto) {
+    public String saveMessage(String email, MessageRequestDto messageRequestDto) {
         User user = userRepository.findByEmail(email).get();
-        if (messageRequestDto != null) {
-            Message message = Message.builder()
-                    .message(messageRequestDto.getMessage())
-                    .user(user)
-                    .build();
 
-            messageRepository.save(message);
-        }
+        Message message = Message.builder()
+                .message(messageRequestDto.getMessage())
+                .user(user)
+                .build();
+
+        messageRepository.save(message);
+        return "부고문자 저장";
     }
 
     // 부고문자 조회
-    public MessageResponseDto getMessage(Long messageId) {
-        Message message = messageRepository.findById(messageId).get();
-
+    public MessageResponseDto getMessage(Long userId) {
+        Message message = messageRepository.findByUserUserId(userId);
         return MessageResponseDto.toDto(message);
     }
 

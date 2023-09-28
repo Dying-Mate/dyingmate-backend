@@ -16,22 +16,21 @@ public class WillService {
     public final UserRepository userRepository;
 
     // 유언장 저장
-    public void saveWill(String email, WillRequestDto willRequestDto) {
+    public String saveWill(String email, WillRequestDto willRequestDto) {
         User user = userRepository.findByEmail(email).get();
-        if (willRequestDto != null) {
-            Will will = Will.builder()
-                    .content(willRequestDto.getContent())
-                    .user(user)
-                    .build();
 
-            willRepository.save(will);
-        }
+        Will will = Will.builder()
+                .content(willRequestDto.getContent())
+                .user(user)
+                .build();
+
+        willRepository.save(will);
+        return "유언장 저장";
     }
 
     // 유언장 조회
-    public WillResponseDto getWill(Long willId) {
-        Will will = willRepository.findById(willId).get();
-
+    public WillResponseDto getWill(Long userId) {
+        Will will = willRepository.findByUserUserId(userId);
         return WillResponseDto.toDto(will);
     }
 

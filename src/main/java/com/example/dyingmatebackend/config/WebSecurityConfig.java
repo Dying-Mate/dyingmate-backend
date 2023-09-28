@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,7 +33,9 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여 인증 예정
                 .authorizeHttpRequests(authorize -> { // 요청에 대한 권한 설정
-                    authorize.requestMatchers("/user/**").permitAll()
+                    authorize.requestMatchers("/user/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**",
+                                    "/v3/api-docs/**", "/v2/api-docs", "/swagger-resources",
+                                    "configuration/ui", "/configuration/security", "/webjars/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtAuthenticationFilter(jwtAuthenticationProvider), UsernamePasswordAuthenticationFilter.class);

@@ -1,9 +1,8 @@
 package com.example.dyingmatebackend.will;
 
 import com.example.dyingmatebackend.ApiResponse;
-import com.example.dyingmatebackend.user.User;
+import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,20 +12,19 @@ import org.springframework.web.bind.annotation.*;
 public class WillController {
 
     private final WillService willService;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     // 유언장 저장
     @PostMapping("/write")
     public ApiResponse<?> writeWill(@RequestBody WillRequestDto willRequestDto, Authentication authentication) {
-        willService.saveWill(authentication.getName(), willRequestDto);
-        return ApiResponse.createSuccessWithNoData("유언장 저장 성공");
+        return ApiResponse.ok(willService.saveWill(authentication.getName(), willRequestDto));
     }
 
     // 유언장 조회
-    @GetMapping("/get/{willId}")
-    public ApiResponse<?> getWill(@PathVariable Long willId) {
-        WillResponseDto willResponse = willService.getWill(willId);
-
-        return ApiResponse.createSuccess("유언장 조회", willResponse);
+    @GetMapping("/load")
+    public ApiResponse<?> getWill() {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(willService.getWill(userId));
     }
 
     // 유언장 수정

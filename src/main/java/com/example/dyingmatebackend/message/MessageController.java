@@ -1,6 +1,7 @@
 package com.example.dyingmatebackend.message;
 
 import com.example.dyingmatebackend.ApiResponse;
+import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +12,19 @@ import org.springframework.web.bind.annotation.*;
 public class MessageController {
 
     public final MessageService messageService;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     // 부고문자 저장
     @PostMapping("/send")
     public ApiResponse<?> sendMessage(@RequestBody MessageRequestDto messageRequestDto, Authentication authentication) {
-        messageService.saveMessage(authentication.getName(), messageRequestDto);
-        return ApiResponse.createSuccessWithNoData("부고문자 저장 성공");
+        return ApiResponse.ok(messageService.saveMessage(authentication.getName(), messageRequestDto));
     }
 
     // 부고문자 조회
-    @GetMapping("/get/{messageId}")
-    public ApiResponse<?> getMessage(@PathVariable Long messageId) {
-        MessageResponseDto messageResponseDto = messageService.getMessage(messageId);
-
-        return ApiResponse.createSuccess("부고문자 조회", messageResponseDto);
+    @GetMapping("/load")
+    public ApiResponse<?> getMessage() {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(messageService.getMessage(userId));
     }
 
     // 부고문자 수정

@@ -1,7 +1,11 @@
 package com.example.dyingmatebackend.jwt;
 
 import com.example.dyingmatebackend.user.CustomUserDetailsService;
+import com.example.dyingmatebackend.user.User;
+import com.example.dyingmatebackend.user.UserRepository;
 import com.example.dyingmatebackend.user.UserRequestDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,11 +14,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
@@ -24,6 +27,7 @@ public class JwtAuthenticationProvider {
     private static String secretKey = "secretKey";
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final UserRepository userRepository;
 
     public static String createAccesssToken(UserRequestDto userRequestDto) {
         return Jwts.builder()
@@ -84,5 +88,14 @@ public class JwtAuthenticationProvider {
     public boolean isExpiredToken(String accessToken) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken) // return 타입 Date
                 .getBody().getExpiration().before(new Date()); // token이 Expired된 것이 지금보다 전이냐?
+    }
+
+    // 토큰으로부터 user id 받아오기
+    public Long getUserId(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String accessToken = request.getHeader("Authorization").split(" ")[1].trim();
+        String email = getEmail(accessToken);
+        User user = userRepository.findByEmail(email).get();
+        return user.getUserId();
     }
 }
