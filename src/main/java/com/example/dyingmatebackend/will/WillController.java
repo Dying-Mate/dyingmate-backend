@@ -28,10 +28,9 @@ public class WillController {
     }
 
     // 유언장 수정
-    @PatchMapping("/modify/{willId}")
-    public ApiResponse<?> modifyWill(@PathVariable Long willId, @RequestBody WillRequestDto willRequestDto) {
-        WillResponseDto willResponseDto = willService.modifyWill(willId, willRequestDto);
-
-        return ApiResponse.createSuccess("유언장 수정", willResponseDto);
+    @PatchMapping("/modify")
+    public ApiResponse<?> modifyWill(@RequestBody WillRequestDto willRequestDto) {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(willService.modifyWill(userId, willRequestDto));
     }
 }

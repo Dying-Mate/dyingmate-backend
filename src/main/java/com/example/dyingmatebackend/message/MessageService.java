@@ -34,8 +34,8 @@ public class MessageService {
 
     // 부고문자 수정
     @Transactional
-    public MessageResponseDto modifyMessage(Long messageId, MessageRequestDto messageRequestDto) {
-        Message message = messageRepository.findById(messageId).get();
+    public MessageResponseDto modifyMessage(Long userId, MessageRequestDto messageRequestDto) {
+        Message message = messageRepository.findByUserUserId(userId);
         message.updateMessage(messageRequestDto.getMessage());
         return MessageResponseDto.toDto(message);
     }

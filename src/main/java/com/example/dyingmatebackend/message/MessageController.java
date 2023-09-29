@@ -28,10 +28,9 @@ public class MessageController {
     }
 
     // 부고문자 수정
-    @PatchMapping("/modify/{messageId}")
-    public ApiResponse<?> modifyMessage(@PathVariable Long messageId, @RequestBody MessageRequestDto messageRequestDto) {
-        MessageResponseDto messageResponseDto = messageService.modifyMessage(messageId, messageRequestDto);
-
-        return ApiResponse.createSuccess("부고문자 수정", messageResponseDto);
+    @PatchMapping("/modify")
+    public ApiResponse<?> modifyMessage(@RequestBody MessageRequestDto messageRequestDto) {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(messageService.modifyMessage(userId, messageRequestDto));
     }
 }

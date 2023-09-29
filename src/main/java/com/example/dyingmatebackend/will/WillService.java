@@ -36,8 +36,8 @@ public class WillService {
 
     // 유언장 수정
     @Transactional
-    public WillResponseDto modifyWill(Long willId, WillRequestDto willRequestDto) {
-        Will will = willRepository.findById(willId).get();
+    public WillResponseDto modifyWill(Long userId, WillRequestDto willRequestDto) {
+        Will will = willRepository.findByUserUserId(userId);
         will.updateContent(willRequestDto.getContent());
         return WillResponseDto.toDto(will);
     }
