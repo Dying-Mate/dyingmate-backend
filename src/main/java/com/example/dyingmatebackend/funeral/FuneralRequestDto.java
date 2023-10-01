@@ -1,14 +1,15 @@
 package com.example.dyingmatebackend.funeral;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class FuneralRequestDto {
 
     public int method;
     public String epitaph;
-    public String portrait_photo;
+    public MultipartFile portrait_photo;
 
 }

@@ -36,6 +36,6 @@ public class Funeral {
     public void updateFuneral(FuneralRequestDto requestDto) {
         this.method = requestDto.getMethod();
         this.epitaph = requestDto.getEpitaph();
-        this.portrait_photo = requestDto.getPortrait_photo();
+        this.portrait_photo = requestDto.getPortrait_photo().getOriginalFilename();
     }
 }

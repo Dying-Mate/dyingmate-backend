@@ -16,31 +16,30 @@ public class FuneralService {
     public final UserRepository userRepository;
 
     // 장례방식 저장
-    public void saveFuneral(String email, FuneralRequestDto funeralRequestDto) {
+    public String saveFuneral(String email, FuneralRequestDto funeralRequestDto) {
         User user = userRepository.findByEmail(email).get();
-        if (funeralRequestDto != null) {
-            Funeral funeral = Funeral.builder()
-                    .method(funeralRequestDto.getMethod())
-                    .epitaph(funeralRequestDto.getEpitaph())
-                    .portrait_photo(funeralRequestDto.getPortrait_photo())
-                    .user(user)
-                    .build();
 
-            funeralRepository.save(funeral);
-        }
+        Funeral funeral = Funeral.builder()
+                .method(funeralRequestDto.getMethod())
+                .epitaph(funeralRequestDto.getEpitaph())
+                .portrait_photo(funeralRequestDto.getPortrait_photo().getOriginalFilename())
+                .user(user)
+                .build();
+
+        funeralRepository.save(funeral);
+        return "장례준비 저장";
     }
 
     // 장례방식 조회
-    public FuneralResponseDto getFuneral(Long funeralId) {
-        Funeral funeral = funeralRepository.findById(funeralId).get();
-
+    public FuneralResponseDto getFuneral(Long userId) {
+        Funeral funeral = funeralRepository.findByUserUserId(userId);
         return FuneralResponseDto.toDto(funeral);
     }
 
     // 장례방식 수정
     @Transactional
-    public FuneralResponseDto patchFuneral(Long funeralId, FuneralRequestDto funeralRequestDto) {
-        Funeral funeral = funeralRepository.findById(funeralId).get();
+    public FuneralResponseDto modifyFuneral(Long userId, FuneralRequestDto funeralRequestDto) {
+        Funeral funeral = funeralRepository.findByUserUserId(userId);
         funeral.updateFuneral(funeralRequestDto);
         return FuneralResponseDto.toDto(funeral);
     }
