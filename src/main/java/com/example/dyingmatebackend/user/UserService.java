@@ -22,18 +22,19 @@ public class UserService {
 
     // 회원가입
     public UserResponseDto join(UserRequestDto userRequestDto) {
-        if (!userRepository.existsByEmail(userRequestDto.getEmail())) {
-            User user = User.builder()
-                    .email(userRequestDto.getEmail())
-                    .pwd(passwordEncoder.encode(userRequestDto.getPwd()))
-                    .build();
+        User user = User.builder()
+                .email(userRequestDto.getEmail())
+                .pwd(passwordEncoder.encode(userRequestDto.getPwd()))
+                .build();
 
-            userRepository.save(user);
+        userRepository.save(user);
 
-            return new UserResponseDto(user.getUserId(), user.getEmail(), null);
-        } else {
-            throw new ApplicatonException(ErrorCode.DUPLICATE_EMAIL);
-        }
+        return new UserResponseDto(user.getUserId(), user.getEmail(), null);
+    }
+
+    // 회원가입 중복 여부
+    public boolean checkEmailDuplicate(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     // 로그인
