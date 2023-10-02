@@ -1,10 +1,7 @@
 package com.example.dyingmatebackend.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -21,4 +18,10 @@ public class User { // 사용자 정보를 담는 인터페이스
     private String email; // (=username)
 
     private String pwd;
+
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

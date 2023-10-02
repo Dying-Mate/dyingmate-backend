@@ -4,13 +4,9 @@ import com.example.dyingmatebackend.exception.ApplicatonException;
 import com.example.dyingmatebackend.exception.ErrorCode;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -54,5 +50,13 @@ public class UserService {
         } else {
             throw new ApplicatonException(ErrorCode.INCORRECT_PASSWORD);
         }
+    }
+
+    // 사용자 이름 저장
+    @Transactional
+    public String saveName(Long userId, String name) {
+        User user = userRepository.findById(userId).get();
+        user.setName(name);
+        return "이름 저장";
     }
 }

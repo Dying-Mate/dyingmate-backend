@@ -1,6 +1,7 @@
 package com.example.dyingmatebackend.user;
 
 import com.example.dyingmatebackend.ApiResponse;
+import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     // 회원가입
     @PostMapping("/join")
@@ -27,5 +29,12 @@ public class UserController {
     @PostMapping("/login")
     public ApiResponse<?> login(@RequestBody UserRequestDto userRequestDto) {
         return ApiResponse.ok(userService.login(userRequestDto));
+    }
+
+    // 사용자 이름 저장
+    @PostMapping("/{name}/save")
+    public ApiResponse<?> saveName(@PathVariable String name) {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(userService.saveName(userId, name));
     }
 }
