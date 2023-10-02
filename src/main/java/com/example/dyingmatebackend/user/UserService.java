@@ -57,6 +57,6 @@ public class UserService {
     public String saveName(Long userId, String name) {
         User user = userRepository.findById(userId).get();
         user.setName(name);
-        return "이름 저장";
+        return user.getName();
     }
 }
