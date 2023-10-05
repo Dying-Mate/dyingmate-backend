@@ -24,12 +24,18 @@ public class BucketlistController {
     @GetMapping("/load")
     public ApiResponse<?> getBucketlist() {
         Long userId = jwtAuthenticationProvider.getUserId();
-        return ApiResponse.ok(bucketlistService.getBucketlist(userId));
+        return ApiResponse.ok(bucketlistService.getMemos(userId));
     }
 
     // 버킷리스트 달성 여부 체크
     @PatchMapping("/complete/{bucketlistId}")
     public ApiResponse<?> bucketlistComplete(@PathVariable Long bucketlistId) {
-        return ApiResponse.ok(bucketlistService.checkBucketlist(bucketlistId));
+        return ApiResponse.ok(bucketlistService.checkMemo(bucketlistId));
+    }
+
+    // 버킷리스트 삭제
+    @DeleteMapping("/{bucketlistId}")
+    public ApiResponse<?> deleteBucketlist(@PathVariable Long bucketlistId) {
+        return ApiResponse.ok(bucketlistService.deleteMemo(bucketlistId));
     }
 }

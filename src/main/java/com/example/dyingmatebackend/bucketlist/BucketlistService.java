@@ -36,7 +36,7 @@ public class BucketlistService {
     }
 
     // 버킷리스트 조회
-    public List<BucketlistResponseDto> getBucketlist(Long userId) {
+    public List<BucketlistResponseDto> getMemos(Long userId) {
         List<Bucketlist> bucketlists = bucketlistRepository.findByUserUserId(userId);
 
         List<BucketlistResponseDto> bucketlistResponseDtoList = new ArrayList<>();
@@ -50,9 +50,14 @@ public class BucketlistService {
 
     // 버킷리스트 달성 여부 체크
     @Transactional
-    public String checkBucketlist(Long bucketlistId) {
+    public String checkMemo(Long bucketlistId) {
         Bucketlist bucketlist = bucketlistRepository.findById(bucketlistId).get();
         bucketlist.checkComplete(true);
         return "버킷리스트 달성 완료";
+    }
+
+    public String deleteMemo(Long bucketlistId) {
+        bucketlistRepository.deleteById(bucketlistId);
+        return "버킷리스트 삭제 완료";
     }
 }
