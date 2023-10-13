@@ -1,6 +1,8 @@
 package com.example.dyingmatebackend.bucketlist;
 
 import com.example.dyingmatebackend.ApiResponse;
+import com.example.dyingmatebackend.bucketlist.dto.req.FileRequest;
+import com.example.dyingmatebackend.bucketlist.dto.req.TitleRequest;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -14,10 +16,16 @@ public class BucketlistController {
     private final BucketlistService bucketlistService;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-    // 버킷리스트 추가
+    // 버킷리스트 추가 (form-data)
     @PostMapping("/add")
-    public ApiResponse<?> addBucketlist(@ModelAttribute BucketlistRequestDto bucketlistRequestDto, Authentication authentication) {
-        return ApiResponse.ok(bucketlistService.addMemo(authentication.getName(), bucketlistRequestDto));
+    public ApiResponse<?> addFileBucketlist(@ModelAttribute FileRequest fileRequest, Authentication authentication) {
+        return ApiResponse.ok(bucketlistService.addFileMemo(authentication.getName(), fileRequest));
+    }
+
+    // 버킷리스트 추가 (타이틀)
+    @PostMapping("/add/title")
+    public ApiResponse<?> addBucketlist(@RequestBody TitleRequest titleRequest, Authentication authentication) {
+        return ApiResponse.ok(bucketlistService.addTitleMemo(authentication.getName(), titleRequest));
     }
 
     // 버킷리스트 조회

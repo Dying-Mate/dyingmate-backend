@@ -2,10 +2,7 @@ package com.example.dyingmatebackend.bucketlist;
 
 import com.example.dyingmatebackend.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -25,8 +22,8 @@ public class Bucketlist {
 
     private boolean isComplete; // true = 1 = 완료, false = 0 = 미완료
 
-    private double xLoc;
-    private double yLoc;
+    private double memoX;
+    private double memoY;
 
     @Column(nullable = true)
     private String photo;

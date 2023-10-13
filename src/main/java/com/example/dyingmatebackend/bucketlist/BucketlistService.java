@@ -1,14 +1,18 @@
 package com.example.dyingmatebackend.bucketlist;
 
+import com.example.dyingmatebackend.bucketlist.dto.req.FileRequest;
+import com.example.dyingmatebackend.bucketlist.dto.req.TitleRequest;
+import com.example.dyingmatebackend.bucketlist.dto.res.BucketlistResponseList;
+import com.example.dyingmatebackend.bucketlist.dto.res.FileResponse;
+import com.example.dyingmatebackend.bucketlist.dto.res.TitleResponse;
 import com.example.dyingmatebackend.user.User;
 import com.example.dyingmatebackend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -17,35 +21,35 @@ public class BucketlistService {
     private final BucketlistRepository bucketlistRepository;
     private final UserRepository userRepository;
 
-    // 버킷리스트 추가
-    public String addMemo(String email, BucketlistRequestDto bucketlistRequestDto) {
+    // 버킷리스트 추가 (form-data)
+    public String addFileMemo(String email, FileRequest fileRequest) {
         User user = userRepository.findByEmail(email).get();
-
-        Bucketlist bucketlist = Bucketlist.builder()
-                .title(bucketlistRequestDto.getTitle())
-                .content(bucketlistRequestDto.getContent())
-                .isComplete(false)
-                .xLoc(bucketlistRequestDto.getXLoc())
-                .yLoc(bucketlistRequestDto.getYLoc())
-                .photo(bucketlistRequestDto.getPhoto().getOriginalFilename())
-                .user(user)
-                .build();
-
-        bucketlistRepository.save(bucketlist);
+        bucketlistRepository.save(fileRequest.toEntity(user));
         return "버킷리스트 추가";
     }
 
+    // 버킷리스트 추가 (타이틀)
+    public String addTitleMemo(String email, TitleRequest titleRequest) {
+        User user = userRepository.findByEmail(email).get();
+        bucketlistRepository.save(titleRequest.toEntity(user));
+        return "버킷리스트 타이틀 추가";
+    }
+
     // 버킷리스트 조회
-    public List<BucketlistResponseDto> getMemos(Long userId) {
+    public BucketlistResponseList getMemos(Long userId) {
         List<Bucketlist> bucketlists = bucketlistRepository.findByUserUserId(userId);
 
-        List<BucketlistResponseDto> bucketlistResponseDtoList = new ArrayList<>();
+        List<FileResponse> fileResponseList = bucketlists.stream()
+                .filter(memo -> memo.getTitle() == null)
+                .map(FileResponse::of)
+                .collect(Collectors.toList());
 
-        for (Bucketlist memo : bucketlists) {
-            bucketlistResponseDtoList.add(BucketlistResponseDto.toDto(memo));
-        }
+        List<TitleResponse> titleResponseList = bucketlists.stream()
+                .filter(memo -> memo.getTitle() != null)
+                .map(TitleResponse::of)
+                .collect(Collectors.toList());
 
-        return bucketlistResponseDtoList;
+        return BucketlistResponseList.of(fileResponseList, titleResponseList);
     }
 
     // 버킷리스트 달성 여부 체크
