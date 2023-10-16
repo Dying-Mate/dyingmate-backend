@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer { // CORS 설정
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://dying-mate.netlify.app")
+                .allowedOrigins("https://dyingmate.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
