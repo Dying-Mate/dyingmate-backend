@@ -18,14 +18,18 @@ public class UserService {
 
     // 회원가입
     public UserResponseDto join(UserRequestDto userRequestDto) {
-        User user = User.builder()
-                .email(userRequestDto.getEmail())
-                .pwd(passwordEncoder.encode(userRequestDto.getPwd()))
-                .build();
+        if (!userRepository.existsByEmail(userRequestDto.getEmail())) {
+            User user = User.builder()
+                    .email(userRequestDto.getEmail())
+                    .pwd(passwordEncoder.encode(userRequestDto.getPwd()))
+                    .build();
 
-        userRepository.save(user);
+            userRepository.save(user);
 
-        return new UserResponseDto(user.getUserId(), user.getEmail(), null);
+            return new UserResponseDto(user.getUserId(), user.getEmail(), null);
+        } else {
+            throw new ApplicatonException(ErrorCode.DUPLICATE_EMAIL);
+        }
     }
 
     // 회원가입 중복 여부
