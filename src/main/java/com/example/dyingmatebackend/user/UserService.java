@@ -3,6 +3,8 @@ package com.example.dyingmatebackend.user;
 import com.example.dyingmatebackend.exception.ApplicatonException;
 import com.example.dyingmatebackend.exception.ErrorCode;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
+import com.example.dyingmatebackend.map.Map;
+import com.example.dyingmatebackend.map.MapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final MapRepository mapRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
@@ -25,6 +28,7 @@ public class UserService {
                     .build();
 
             userRepository.save(user);
+            mapRepository.save(Map.builder().user(user).build());
 
             return new UserResponseDto(user.getUserId(), user.getEmail(), null);
         } else {
