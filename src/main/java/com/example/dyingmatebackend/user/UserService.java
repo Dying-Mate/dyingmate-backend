@@ -25,6 +25,7 @@ public class UserService {
             User user = User.builder()
                     .email(userRequestDto.getEmail())
                     .pwd(passwordEncoder.encode(userRequestDto.getPwd()))
+                    .photoNum(userRequestDto.getPhotoNum())
                     .build();
 
             userRepository.save(user);
