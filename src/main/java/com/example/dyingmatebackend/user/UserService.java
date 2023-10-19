@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -21,11 +23,13 @@ public class UserService {
 
     // 회원가입
     public UserResponseDto join(UserRequestDto userRequestDto) {
+        Random random = new Random();
+
         if (!userRepository.existsByEmail(userRequestDto.getEmail())) {
             User user = User.builder()
                     .email(userRequestDto.getEmail())
                     .pwd(passwordEncoder.encode(userRequestDto.getPwd()))
-                    .photoNum(userRequestDto.getPhotoNum())
+                    .photoNum(random.nextInt(3))
                     .build();
 
             userRepository.save(user);
