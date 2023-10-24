@@ -14,14 +14,6 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-    public static<T> ApiResponse<?> createSuccess(String message, T data) {
-        return new ApiResponse<>(HttpStatus.OK, message, data);
-    }
-
-    public static<T> ApiResponse<?> createSuccessWithNoData(String message) {
-        return new ApiResponse<>(HttpStatus.OK, message, null);
-    }
-
     public static <T> ApiResponse<T> ok() {
         return (ApiResponse<T>) ApiResponse.builder()
                 .status(HttpStatus.OK)
