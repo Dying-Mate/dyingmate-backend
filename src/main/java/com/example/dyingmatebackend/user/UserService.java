@@ -5,6 +5,7 @@ import com.example.dyingmatebackend.exception.ErrorCode;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import com.example.dyingmatebackend.map.Map;
 import com.example.dyingmatebackend.map.MapRepository;
+import com.example.dyingmatebackend.user.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,16 +48,20 @@ public class UserService {
     }
 
     // 로그인
-    public UserResponseDto login(UserRequestDto userRequestDto) {
+    public LoginResponse login(UserRequestDto userRequestDto) {
         User user = userRepository.findByEmail(userRequestDto.getEmail()).orElseThrow(() ->
                 new ApplicatonException(ErrorCode.USER_NOT_FOUND)); // 유저가 존재하지 않을 때
 
         if (passwordEncoder.matches(userRequestDto.getPwd(), user.getPwd())) { // 비밀번호가 일치할 때
-            String token = jwtAuthenticationProvider.createAccesssToken(userRequestDto);
+            String accessToken = jwtAuthenticationProvider.createAccessToken(user.getUserId(), user.getName());
+            String refreshToken = jwtAuthenticationProvider.createRefreshToken(user.getUserId(), user.getName());
 
-            UserResponseDto response = UserResponseDto.builder()
-                    .email(userRequestDto.getEmail())
-                    .token(token)
+            LoginResponse response = LoginResponse.builder()
+                    .id(user.getUserId())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
                     .build();
 
             return response;

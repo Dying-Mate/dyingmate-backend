@@ -3,13 +3,12 @@ package com.example.dyingmatebackend.jwt;
 import com.example.dyingmatebackend.user.CustomUserDetailsService;
 import com.example.dyingmatebackend.user.User;
 import com.example.dyingmatebackend.user.UserRepository;
-import com.example.dyingmatebackend.user.UserRequestDto;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,44 +22,44 @@ import java.util.*;
 @Component
 public class JwtAuthenticationProvider {
 
-    // @Value("${jwt.secret}")
-    private static String secretKey = "secretKey";
+    @Value("${jwt.secret}")
+    private String secretKey = "seceretKey";
+
+    @Value("${jwt.access-token-time}")
+    private long access_token_time;
+
+    @Value("${jwt.refresh-token-time}")
+    private long refresh_token_time;
 
     private final CustomUserDetailsService customUserDetailsService;
     private final UserRepository userRepository;
 
-    public static String createAccesssToken(UserRequestDto userRequestDto) {
+    // Access Token 생성
+    public String createAccessToken(Long userId, String name) {
+        return createToken(userId, name, "Access", access_token_time);
+    }
+
+    // Refresh Token 생성
+    public String createRefreshToken(Long userId, String name) {
+        return createToken(userId, name, "Refresh", refresh_token_time);
+    }
+
+    public String createToken(Long userId, String name,
+                              String type, Long tokenValidTime) {
         return Jwts.builder()
-                .setHeader(createHeader()) // Header 구성
-                .setClaims(createClaims(userRequestDto)) // Payload - Claims 구성
-                .setSubject(userRequestDto.getEmail()) // Payload - Subject 구성
-                .signWith(SignatureAlgorithm.HS256, secretKey) // Signature 구성
-                .setExpiration(createExpiredDate()) // Expired Date 구성
+                .setHeaderParam("type", type) // Header 구성
+                .setClaims(createClaims(userId, name)) // Payload - Claims 구성
+                .setSubject(userId.toString()) // Payload - Subject 구성
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
                 .compact();
     }
 
-    private static Map<String, Object> createHeader() {
-        Map<String, Object> header = new HashMap<>();
-
-        header.put("typ", "JWT");
-        header.put("alg", "HS256");
-
-        return header;
-    }
-
-    private static Map<String, Object> createClaims(UserRequestDto userRequestDto) {
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("email", userRequestDto.getEmail());
-        claims.put("pwd", userRequestDto.getPwd());
-
+    public static Claims createClaims(Long userId, String name) {
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
+        claims.put("name", name);
         return claims;
-    }
-
-    private static Date createExpiredDate() { // 토큰 만료 시간 지정 (한 달)
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 30);
-        return calendar.getTime();
     }
 
     // 권한 정보 확인
