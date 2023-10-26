@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 클라이
 
             // token이 존재하지 않으면 Block
             if (authentication == null || !authentication.startsWith("Bearer ")) {
-                log.error("Authorization을 잘못 보냈습니다.");
+                log.error("Authorization이 존재하지 않습니다.");
                 filterChain.doFilter(request, response);
                 return;
             }
