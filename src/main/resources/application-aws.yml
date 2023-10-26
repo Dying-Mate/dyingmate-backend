@@ -1,0 +1,16 @@
+#DataSource
+spring:
+  datasource:
+    url: ${MYSQL_DATABASE_URL}
+    username: ${MYSQL_DATABASE_USERNAME}
+    password: ${MYSQL_DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  access-token-time: ${ACCESS_TOKEN_TIME}
+  refresh-token-time: ${REFRESH_TOKEN_TIME}
