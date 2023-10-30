@@ -60,6 +60,7 @@ public class UserService {
                     .id(user.getUserId())
                     .name(user.getName())
                     .email(user.getEmail())
+                    .photoNum(user.getPhotoNum())
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();

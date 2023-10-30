@@ -14,6 +14,7 @@ public class LoginResponse {
     private Long id;
     private String name;
     private String email;
+    private int photoNum;
     private String accessToken;
     private String refreshToken;
 }
