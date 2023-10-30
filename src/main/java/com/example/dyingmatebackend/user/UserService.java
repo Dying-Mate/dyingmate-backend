@@ -53,8 +53,8 @@ public class UserService {
                 new ApplicatonException(ErrorCode.USER_NOT_FOUND)); // 유저가 존재하지 않을 때
 
         if (passwordEncoder.matches(userRequestDto.getPwd(), user.getPwd())) { // 비밀번호가 일치할 때
-            String accessToken = jwtAuthenticationProvider.createAccessToken(user.getUserId(), user.getName());
-            String refreshToken = jwtAuthenticationProvider.createRefreshToken(user.getUserId(), user.getName());
+            String accessToken = jwtAuthenticationProvider.createAccessToken(user.getUserId(), user.getEmail());
+            String refreshToken = jwtAuthenticationProvider.createRefreshToken(user.getUserId(), user.getEmail());
 
             LoginResponse response = LoginResponse.builder()
                     .id(user.getUserId())
@@ -73,6 +73,12 @@ public class UserService {
     // 사용자 이름 저장
     @Transactional
     public String saveName(Long userId, String name) {
+        User user = userRepository.findById(userId).get();
+        user.setName(name);
+        return user.getName();
+    }
+
+    public String modifyName(Long userId, String name) {
         User user = userRepository.findById(userId).get();
         user.setName(name);
         return user.getName();

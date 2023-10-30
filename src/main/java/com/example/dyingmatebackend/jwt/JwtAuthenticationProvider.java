@@ -23,7 +23,7 @@ import java.util.*;
 public class JwtAuthenticationProvider {
 
     @Value("${jwt.secret}")
-    private String secretKey = "seceretKey";
+    private String secretKey;
 
     @Value("${jwt.access-token-time}")
     private long access_token_time;
@@ -35,32 +35,31 @@ public class JwtAuthenticationProvider {
     private final UserRepository userRepository;
 
     // Access Token 생성
-    public String createAccessToken(Long userId, String name) {
-        return createToken(userId, name, "Access", access_token_time);
+    public String createAccessToken(Long userId, String email) {
+        return createToken(userId, email, "Access", access_token_time);
     }
 
     // Refresh Token 생성
-    public String createRefreshToken(Long userId, String name) {
-        return createToken(userId, name, "Refresh", refresh_token_time);
+    public String createRefreshToken(Long userId, String email) {
+        return createToken(userId, email, "Refresh", refresh_token_time);
     }
 
-    public String createToken(Long userId, String name,
+    public String createToken(Long userId, String email,
                               String type, Long tokenValidTime) {
         return Jwts.builder()
                 .setHeaderParam("type", type) // Header 구성
-                .setClaims(createClaims(userId, name)) // Payload - Claims 구성
-                .setSubject(userId.toString()) // Payload - Subject 구성
+                .setClaims(createClaims(userId, email)) // Payload - Claims 구성
+                .setSubject(email) // Payload - Subject 구성
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
                 .compact();
     }
 
-    public static Claims createClaims(Long userId, String name) {
+    public static Claims createClaims(Long userId, String email) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
-        claims.put("name", name);
-        return claims;
-    }
+        claims.put("name", email);
+        return claims;}
 
     // 권한 정보 확인
     public Authentication getAuthentication(String accessToken) {
