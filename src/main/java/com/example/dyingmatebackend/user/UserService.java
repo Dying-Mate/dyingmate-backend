@@ -79,6 +79,7 @@ public class UserService {
         return user.getName();
     }
 
+    @Transactional
     public String modifyName(Long userId, String name) {
         User user = userRepository.findById(userId).get();
         user.setName(name);

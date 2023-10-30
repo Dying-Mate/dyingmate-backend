@@ -7,6 +7,8 @@ import com.example.dyingmatebackend.user.params.KakaoInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @RequiredArgsConstructor
 @Service
 public class OAuthService {
@@ -20,11 +22,13 @@ public class OAuthService {
         KakaoInfoResponse info = kakaoClient.requestKakaoInfo(accessToken);
 
         Long userId = findOrCreateMember(info);
+        User user = userRepository.findById(userId).get();
 
         LoginResponse response = LoginResponse.builder()
                 .id(userId)
-                .name(info.getProperties().getNickname())
-                .email(info.getKakao_account().getEmail())
+                .name(user.getName())
+                .email(user.getEmail())
+                .photoNum(user.getPhotoNum())
                 .accessToken(jwtAuthenticationProvider.createAccessToken(userId, info.getProperties().getNickname()))
                 .refreshToken(jwtAuthenticationProvider.createRefreshToken(userId, info.getProperties().getNickname()))
                 .build();
@@ -39,10 +43,13 @@ public class OAuthService {
     }
 
     private Long newMember(KakaoInfoResponse info) {
+        Random random = new Random();
+
         User user = User.builder()
                 .userId(info.getId())
                 .email(info.getKakao_account().getEmail())
                 .name(info.getProperties().getNickname())
+                .photoNum(random.nextInt(3))
                 .build();
 
         userRepository.save(user);
