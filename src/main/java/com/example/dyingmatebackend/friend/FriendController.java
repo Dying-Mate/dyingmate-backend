@@ -14,10 +14,10 @@ public class FriendController {
     private final FriendService friendService;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-    // 친구 검색 (email로 검색)
+    // 친구 검색
     @GetMapping("/search")
-    public ApiResponse<?> searchFriend(@RequestParam String email) {
-        return ApiResponse.ok(friendService.searchFriend(email));
+    public ApiResponse<?> searchFriend() {
+        return ApiResponse.ok(friendService.searchFriend()); // 모든 유저 반환
     }
 
     // 친구 요청

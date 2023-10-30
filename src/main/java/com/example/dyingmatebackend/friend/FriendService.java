@@ -27,10 +27,18 @@ public class FriendService {
     private final UserRepository userRepository;
 
     // 친구 검색
-    public List<FriendSearch> searchFriend(String email) {
-        List<User> searchResult = userRepository.findAllByEmail(email);
+    public List<FriendSearch> searchFriend() {
+//        List<User> searchResult = userRepository.findByEmailContaining(email);
+//
+//        List<FriendSearch> friendSearchList = searchResult.stream()
+//                .map(FriendSearch::of)
+//                .collect(Collectors.toList());
+//
+//        return friendSearchList;
 
-        List<FriendSearch> friendSearchList = searchResult.stream()
+        List<User> all = userRepository.findAll();
+
+        List<FriendSearch> friendSearchList = all.stream()
                 .map(FriendSearch::of)
                 .collect(Collectors.toList());
 
