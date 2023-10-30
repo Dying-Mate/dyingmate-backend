@@ -40,6 +40,13 @@ public class UserController {
         return ApiResponse.ok(userService.saveName(userId, name));
     }
 
+    // 사용자 이름 수정
+    @PatchMapping("/{name}/modify")
+    public ApiResponse<?> modifyName(@PathVariable String name) {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(userService.modifyName(userId, name));
+    }
+
     // 카카오 로그인
     @PostMapping("/kakao")
     public ApiResponse<LoginResponse> loginKakao(@RequestParam("code") String authorizationCode) {
