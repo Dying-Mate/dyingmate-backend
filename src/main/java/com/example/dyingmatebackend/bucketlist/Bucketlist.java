@@ -35,4 +35,9 @@ public class Bucketlist {
     public void checkComplete(boolean check) {
         this.isComplete = check;
     }
+
+    public void updateXY(double x, double y) {
+        this.memoX = x;
+        this.memoY = y;
+    }
 }

@@ -41,6 +41,14 @@ public class BucketlistController {
         return ApiResponse.ok(bucketlistService.checkMemo(bucketlistId));
     }
 
+    // 버킷리스트 이동
+    @PatchMapping("/move/{bucketlistId}")
+    public ApiResponse<?> bucketlistMove(@PathVariable Long bucketlistId,
+                                         @RequestParam double x,
+                                         @RequestParam double y) {
+        return ApiResponse.ok(bucketlistService.moveMemo(bucketlistId, x, y));
+    }
+
     // 버킷리스트 삭제
     @DeleteMapping("/{bucketlistId}")
     public ApiResponse<?> deleteBucketlist(@PathVariable Long bucketlistId) {

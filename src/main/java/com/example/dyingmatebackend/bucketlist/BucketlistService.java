@@ -60,6 +60,14 @@ public class BucketlistService {
         return "버킷리스트 달성 완료";
     }
 
+    // 버킷리스트 이동
+    @Transactional
+    public String moveMemo(Long bucketlistId, double x, double y) {
+        Bucketlist bucketlist = bucketlistRepository.findById(bucketlistId).get();
+        bucketlist.updateXY(x, y);
+        return "버킷리스트 이동 완료";
+    }
+
     public String deleteMemo(Long bucketlistId) {
         bucketlistRepository.deleteById(bucketlistId);
         return "버킷리스트 삭제 완료";
