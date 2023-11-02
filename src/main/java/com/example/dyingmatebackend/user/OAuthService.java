@@ -46,7 +46,6 @@ public class OAuthService {
         Random random = new Random();
 
         User user = User.builder()
-                .userId(info.getId())
                 .email(info.getProperties().getNickname())
                 .photoNum(random.nextInt(3))
                 .build();
