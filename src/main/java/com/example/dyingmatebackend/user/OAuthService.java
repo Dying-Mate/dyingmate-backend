@@ -2,6 +2,8 @@ package com.example.dyingmatebackend.user;
 
 import com.example.dyingmatebackend.client.KakaoClient;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
+import com.example.dyingmatebackend.map.Map;
+import com.example.dyingmatebackend.map.MapRepository;
 import com.example.dyingmatebackend.user.dto.LoginResponse;
 import com.example.dyingmatebackend.user.params.KakaoInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ public class OAuthService {
 
     private final KakaoClient kakaoClient;
     private final UserRepository userRepository;
+    private final MapRepository mapRepository;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     public LoginResponse loginKakao(String authorizationCode) {
@@ -51,6 +54,7 @@ public class OAuthService {
                 .build();
 
         userRepository.save(user);
+        mapRepository.save(Map.builder().user(user).build());
 
         return user.getUserId();
     }
