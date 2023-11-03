@@ -1,9 +1,11 @@
 package com.example.dyingmatebackend.friend;
 
 import com.example.dyingmatebackend.ApiResponse;
+import com.example.dyingmatebackend.exception.ApplicatonException;
 import com.example.dyingmatebackend.friend.dto.res.FriendSearch;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -17,14 +19,16 @@ public class FriendController {
     // 친구 검색
     @GetMapping("/search")
     public ApiResponse<?> searchFriend() {
-        return ApiResponse.ok(friendService.searchFriend()); // 모든 유저 반환
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(friendService.searchFriend(userId)); // 모든 유저 반환
     }
 
     // 친구 요청
     @PostMapping("/add")
     public ApiResponse<?> requestFriend(@RequestBody FriendSearch friendSearch) {
         Long userId = jwtAuthenticationProvider.getUserId();
-        return ApiResponse.ok(friendService.requestFriend(userId, friendSearch));
+        String friendEmail = friendSearch.getFriendEmail();
+        return ApiResponse.ok(friendService.requestFriend(userId, friendEmail));
     }
 
     // 친구 맺은 목록 & 친구 요청 받은 목록 조회
