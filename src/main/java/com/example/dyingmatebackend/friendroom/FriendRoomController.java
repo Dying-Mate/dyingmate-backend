@@ -14,6 +14,12 @@ public class FriendRoomController {
 
     private final FriendRoomServcie friendRoomServcie;
 
+    // 친구 기록 한번에 반환
+    @GetMapping("/{email}")
+    public ApiResponse<?> getData(@PathVariable String email) {
+        return ApiResponse.ok(friendRoomServcie.getData(email));
+    }
+
     // 친구 유언장
     @GetMapping("/{email}/will")
     public ApiResponse<?> getWill(@PathVariable String email) {

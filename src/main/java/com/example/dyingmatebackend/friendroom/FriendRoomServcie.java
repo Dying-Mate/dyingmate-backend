@@ -32,6 +32,10 @@ public class FriendRoomServcie {
     private final FuneralRepository funeralRepository;
     private final BucketlistRepository bucketlistRepository;
 
+    public FriendRoomResponse getData(String email) {
+        return FriendRoomResponse.of(getWill(email), getMessage(email), getFuneral(email), getBucketlist(email));
+    }
+
     public WillResponseDto getWill(String email) {
         User user = userRepository.findByEmail(email).get();
         Will friendWill = willRepository.findByUserUserId(user.getUserId());
