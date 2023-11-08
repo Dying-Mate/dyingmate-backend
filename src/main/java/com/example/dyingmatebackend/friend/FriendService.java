@@ -59,10 +59,19 @@ public class FriendService {
             addEmails.add(addFriend.getFriendEmail());
         }
 
+        // 친구 요청 받은 정보 제거
+        List<FriendRequest> friendRequested = friendRequestRepository.findByReceiverEmail(user.getEmail());
+        List<String> requestedEmails = new ArrayList<>();
+
+        for (FriendRequest requested : friendRequested) {
+            requestedEmails.add(requested.getSenderEmail());
+        }
+
         List<FriendSearch> friendSearchList = all.stream()
                 .map(FriendSearch::of)
                 .filter(me -> !me.getFriendEmail().equals(user.getEmail())) // 사용자 빼고!
                 .filter(request -> !requestEmails.contains(request.getFriendEmail())) // 이미 요청한 사람 빼고!
+                .filter(requested -> !requestedEmails.contains(requested.getFriendEmail())) // 이미 요청 받은 사람 빼고!
                 .filter(add -> !addEmails.contains(add.getFriendEmail())) // 이미 친구 맺은 사람 빼고!
                 .collect(Collectors.toList());
 
