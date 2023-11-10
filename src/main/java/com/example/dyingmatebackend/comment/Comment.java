@@ -28,10 +28,13 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime creation_date;
 
-    private int likeNum = 0;
+    private int likeNum;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void increaseLikeNum() {
+        this.likeNum++;
+    }
 }

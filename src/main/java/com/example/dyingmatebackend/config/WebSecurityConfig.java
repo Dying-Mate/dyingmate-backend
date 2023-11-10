@@ -33,7 +33,7 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여 인증 예정
                 .authorizeHttpRequests(authorize -> { // 요청에 대한 권한 설정
-                    authorize.requestMatchers("/user/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**",
+                    authorize.requestMatchers("/user/**", "/swagger-ui.html", "/swagger*/**", "/swagger-resources/**",
                                     "/v3/api-docs/**", "/v2/api-docs", "/swagger-resources",
                                     "configuration/ui", "/configuration/security", "/webjars/**").permitAll()
                             .anyRequest().authenticated();

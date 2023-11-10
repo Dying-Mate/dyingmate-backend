@@ -4,6 +4,7 @@ import com.example.dyingmatebackend.user.User;
 import com.example.dyingmatebackend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,5 +40,14 @@ public class CommentService {
         }
 
         return commentList;
+    }
+
+    // 좋아요 수 추가
+    @Transactional
+    public String addLikeNum(Long userId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId).get();
+        comment.increaseLikeNum();
+
+        return "좋아요 수 추가";
     }
 }

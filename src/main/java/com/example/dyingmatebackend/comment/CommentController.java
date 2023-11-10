@@ -25,4 +25,11 @@ public class CommentController {
     public ApiResponse<?> getComments() {
         return ApiResponse.ok(commentService.getComments());
     }
+
+    // 좋아요 수 추가
+    @PatchMapping("/like")
+    public ApiResponse<?> addLikeNum(@RequestParam Long commentId) {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(commentService.addLikeNum(userId, commentId));
+    }
 }

@@ -19,7 +19,7 @@ public class FileRequest {
     public Bucketlist toEntity(User user) {
         String photoSave;
 
-        if (photo.getOriginalFilename().isEmpty()) photoSave = null;
+        if (photo == null) photoSave = null;
         else photoSave = photo.getOriginalFilename();
 
         return Bucketlist.builder()
