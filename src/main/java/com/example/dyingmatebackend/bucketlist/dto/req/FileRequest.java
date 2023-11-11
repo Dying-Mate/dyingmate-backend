@@ -17,18 +17,13 @@ public class FileRequest {
     private MultipartFile photo;
 
     public Bucketlist toEntity(User user) {
-        String photoSave;
-
-        if (photo.getOriginalFilename() == "") photoSave = null;
-        else photoSave = photo.getOriginalFilename();
-
         return Bucketlist.builder()
                 .title(null)
                 .content(content)
                 .isComplete(false) // 추가할 때는 아직 완료하지 않았으니까 달성 여부 false
                 .memoX(memoX)
                 .memoY(memoY)
-                .photo(photoSave)
+                .photo(photo.getOriginalFilename())
                 .user(user)
                 .build();
     }
