@@ -52,4 +52,11 @@ public class UserController {
     public ApiResponse<LoginResponse> loginKakao(@RequestParam("code") String authorizationCode) {
         return ApiResponse.ok(oAuthService.loginKakao(authorizationCode));
     }
+
+    // 초기화
+    @DeleteMapping("/reset")
+    public ApiResponse<?> resetUser() {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(userService.resetUser(userId));
+    }
 }

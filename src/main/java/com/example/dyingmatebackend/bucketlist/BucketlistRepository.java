@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface BucketlistRepository extends JpaRepository<Bucketlist, Long> {
     List<Bucketlist> findByUserUserId(Long userId);
+    void deleteByUserUserId(Long userId);
 }

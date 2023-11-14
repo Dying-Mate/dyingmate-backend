@@ -22,4 +22,8 @@ public class MapService {
     public MapDto getMap(Long userId) {
         return MapDto.of(mapRepository.findByUserUserId(userId));
     }
+
+    public void resetMap(Long userId) {
+        mapRepository.findByUserUserId(userId).resetMap();
+    }
 }

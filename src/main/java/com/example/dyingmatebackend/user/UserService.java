@@ -1,11 +1,19 @@
 package com.example.dyingmatebackend.user;
 
+import com.example.dyingmatebackend.bucketlist.BucketlistRepository;
+import com.example.dyingmatebackend.comment.CommentRepository;
 import com.example.dyingmatebackend.exception.ApplicatonException;
 import com.example.dyingmatebackend.exception.ErrorCode;
+import com.example.dyingmatebackend.friend.repository.FriendListRepository;
+import com.example.dyingmatebackend.friend.repository.FriendRequestRepository;
+import com.example.dyingmatebackend.funeral.FuneralRepository;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import com.example.dyingmatebackend.map.Map;
 import com.example.dyingmatebackend.map.MapRepository;
+import com.example.dyingmatebackend.map.MapService;
+import com.example.dyingmatebackend.message.MessageRepository;
 import com.example.dyingmatebackend.user.dto.LoginResponse;
+import com.example.dyingmatebackend.will.WillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +29,15 @@ public class UserService {
     private final MapRepository mapRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+
+    private final WillRepository willRepository;
+    private final MessageRepository messageRepository;
+    private final FuneralRepository funeralRepository;
+    private final BucketlistRepository bucketlistRepository;
+    private final CommentRepository commentRepository;
+    private final MapService mapService;
+    private final FriendRequestRepository friendRequestRepository;
+    private final FriendListRepository friendListRepository;
 
     // 회원가입
     public UserResponseDto join(UserRequestDto userRequestDto) {
@@ -84,5 +101,23 @@ public class UserService {
         User user = userRepository.findById(userId).get();
         user.setName(name);
         return user.getName();
+    }
+
+    // 초기화
+    @Transactional
+    public String resetUser(Long userId) {
+        willRepository.deleteByUserUserId(userId);
+        messageRepository.deleteByUserUserId(userId);
+        funeralRepository.deleteByUserUserId(userId);
+        bucketlistRepository.deleteByUserUserId(userId);
+        commentRepository.deleteByUserUserId(userId);
+        mapService.resetMap(userId);
+
+        User user = userRepository.findById(userId).get();
+        friendRequestRepository.deleteBySenderEmail(user.getEmail());
+        friendRequestRepository.deleteByReceiverEmail(user.getEmail());
+        friendListRepository.deleteByUserUserId(userId);
+        friendListRepository.deleteByFriendEmail(user.getEmail());
+        return "초기화 완료";
     }
 }

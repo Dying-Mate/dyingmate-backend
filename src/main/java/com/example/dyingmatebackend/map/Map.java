@@ -39,4 +39,10 @@ public class Map {
                 break;
         }
     }
+
+    public void resetMap() {
+        this.stage2 = false;
+        this.stage3 = false;
+        this.stage4 = false;
+    }
 }
