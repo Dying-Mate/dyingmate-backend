@@ -86,7 +86,7 @@ public class FriendService {
         List<FriendList> friendLists = friendListRepository.findByUserUserId(userId);
 
         for (FriendList friend : friendLists) {
-            if (friend.getFriendEmail() != friendEmail) {
+            if (friend.getFriendEmail().equals(friendEmail)) {
                 throw new ApplicatonException(ErrorCode.ALREADY_ADD_FRIEND);
             }
         }
@@ -95,7 +95,7 @@ public class FriendService {
         List<FriendRequest> friendRequests = friendRequestRepository.findBySenderEmail(user.getEmail());
 
         for (FriendRequest request : friendRequests) {
-            if (request.getReceiverEmail() != friendEmail) {
+            if (request.getReceiverEmail().equals(friendEmail)) {
                 throw new ApplicatonException(ErrorCode.ALREADY_REQUEST_FRIEND);
             }
         }
