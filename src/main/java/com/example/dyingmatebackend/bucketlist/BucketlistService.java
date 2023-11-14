@@ -1,5 +1,6 @@
 package com.example.dyingmatebackend.bucketlist;
 
+import com.example.dyingmatebackend.bucketlist.dto.req.ContentRequest;
 import com.example.dyingmatebackend.bucketlist.dto.req.FileRequest;
 import com.example.dyingmatebackend.bucketlist.dto.req.TitleRequest;
 import com.example.dyingmatebackend.bucketlist.dto.res.BucketlistResponseList;
@@ -25,7 +26,14 @@ public class BucketlistService {
     public String addFileMemo(String email, FileRequest fileRequest) {
         User user = userRepository.findByEmail(email).get();
         bucketlistRepository.save(fileRequest.toEntity(user));
-        return "버킷리스트 추가";
+        return "버킷리스트 파일 데이터 추가";
+    }
+
+    // 버킷리스트 추가 (내용)
+    public String addContentMemo(String email, ContentRequest contentRequest) {
+        User user = userRepository.findByEmail(email).get();
+        bucketlistRepository.save(contentRequest.toEntity(user));
+        return "버킷리스트 내용 추가";
     }
 
     // 버킷리스트 추가 (타이틀)

@@ -1,6 +1,7 @@
 package com.example.dyingmatebackend.bucketlist;
 
 import com.example.dyingmatebackend.ApiResponse;
+import com.example.dyingmatebackend.bucketlist.dto.req.ContentRequest;
 import com.example.dyingmatebackend.bucketlist.dto.req.FileRequest;
 import com.example.dyingmatebackend.bucketlist.dto.req.TitleRequest;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
@@ -22,9 +23,15 @@ public class BucketlistController {
         return ApiResponse.ok(bucketlistService.addFileMemo(authentication.getName(), fileRequest));
     }
 
+    // 버킷리스트 추가 (내용)
+    @PostMapping("/add/content")
+    public ApiResponse<?> addContentBucketlist(@RequestBody ContentRequest contentRequest, Authentication authentication) {
+        return ApiResponse.ok(bucketlistService.addContentMemo(authentication.getName(), contentRequest));
+    }
+
     // 버킷리스트 추가 (타이틀)
     @PostMapping("/add/title")
-    public ApiResponse<?> addBucketlist(@RequestBody TitleRequest titleRequest, Authentication authentication) {
+    public ApiResponse<?> addTitleBucketlist(@RequestBody TitleRequest titleRequest, Authentication authentication) {
         return ApiResponse.ok(bucketlistService.addTitleMemo(authentication.getName(), titleRequest));
     }
 
