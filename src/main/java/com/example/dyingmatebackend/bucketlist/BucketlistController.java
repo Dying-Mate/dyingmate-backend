@@ -17,7 +17,7 @@ public class BucketlistController {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     // 버킷리스트 추가 (form-data)
-    @PostMapping("/add")
+    @PostMapping("/add/file")
     public ApiResponse<?> addFileBucketlist(@ModelAttribute FileRequest fileRequest, Authentication authentication) {
         return ApiResponse.ok(bucketlistService.addFileMemo(authentication.getName(), fileRequest));
     }
