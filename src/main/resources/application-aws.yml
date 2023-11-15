@@ -14,3 +14,16 @@ jwt:
   secret: ${JWT_SECRET_KEY}
   access-token-time: ${ACCESS_TOKEN_TIME}
   refresh-token-time: ${REFRESH_TOKEN_TIME}
+
+#S3
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
