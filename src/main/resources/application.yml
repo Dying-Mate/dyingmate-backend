@@ -11,3 +11,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+# Swagger springdoc-ui Configuration
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: method
+    operations-sorter: method
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enabled: true
+  cache:
+    disabled: true
