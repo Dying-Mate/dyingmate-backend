@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -18,7 +20,7 @@ public class FuneralController {
 
     // 장례방식 저장
     @PostMapping("/save")
-    public ApiResponse<?> saveFuneral(@ModelAttribute FuneralRequestDto funeralRequestDto, Authentication authentication) {
+    public ApiResponse<?> saveFuneral(@ModelAttribute FuneralRequestDto funeralRequestDto, Authentication authentication) throws IOException {
         return ApiResponse.ok(funeralService.saveFuneral(authentication.getName(), funeralRequestDto));
     }
 
