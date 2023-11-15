@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/bucketlist")
@@ -19,7 +21,7 @@ public class BucketlistController {
 
     // 버킷리스트 추가 (form-data)
     @PostMapping("/add/file")
-    public ApiResponse<?> addFileBucketlist(@ModelAttribute FileRequest fileRequest, Authentication authentication) {
+    public ApiResponse<?> addFileBucketlist(@ModelAttribute FileRequest fileRequest, Authentication authentication) throws IOException {
         return ApiResponse.ok(bucketlistService.addFileMemo(authentication.getName(), fileRequest));
     }
 

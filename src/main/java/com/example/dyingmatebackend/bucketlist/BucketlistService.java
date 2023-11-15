@@ -6,12 +6,14 @@ import com.example.dyingmatebackend.bucketlist.dto.req.TitleRequest;
 import com.example.dyingmatebackend.bucketlist.dto.res.BucketlistResponseList;
 import com.example.dyingmatebackend.bucketlist.dto.res.FileResponse;
 import com.example.dyingmatebackend.bucketlist.dto.res.TitleResponse;
+import com.example.dyingmatebackend.s3.S3Uploader;
 import com.example.dyingmatebackend.user.User;
 import com.example.dyingmatebackend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,11 +23,13 @@ public class BucketlistService {
 
     private final BucketlistRepository bucketlistRepository;
     private final UserRepository userRepository;
+    private final S3Uploader s3Uploader;
 
     // 버킷리스트 추가 (form-data)
-    public String addFileMemo(String email, FileRequest fileRequest) {
+    public String addFileMemo(String email, FileRequest fileRequest) throws IOException {
         User user = userRepository.findByEmail(email).get();
         bucketlistRepository.save(fileRequest.toEntity(user));
+        s3Uploader.uploadImage(fileRequest.getPhoto());
         return "버킷리스트 파일 데이터 추가";
     }
 
