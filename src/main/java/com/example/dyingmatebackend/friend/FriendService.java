@@ -124,12 +124,17 @@ public class FriendService {
 
         // 친구 맺은 목록 조회
         List<FriendList> friendListLists = friendListRepository.findByUserUserId(user.getUserId());
+        List<FriendList> friendListLists2 = friendListRepository.findByFriendEmail(user.getEmail());
 
         List<FriendListResponse> listResponseList = new ArrayList<>();
 
         for (FriendList friendList : friendListLists) {
             User friendInform = userRepository.findByEmail(friendList.getFriendEmail()).get();
             listResponseList.add(FriendListResponse.of(friendInform));
+        }
+
+        for (FriendList friendList : friendListLists2) {
+            listResponseList.add(FriendListResponse.of(friendList.getUser()));
         }
 
         return FriendResponseList.of(requestResponseList, listResponseList);
