@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -26,7 +27,7 @@ public class Comment {
     private String content;
 
     @CreationTimestamp
-    private LocalDateTime creation_date;
+    private Date creation_date;
 
     private int likeNum;
 

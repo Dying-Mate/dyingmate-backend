@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Builder
@@ -19,7 +20,7 @@ public class CommentResponseDto {
     private String name;
     private String content;
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
-    private LocalDateTime creationTime;
+    private Date creationTime;
     private int likeNum;
 
     public static CommentResponseDto of(Comment comment) {
