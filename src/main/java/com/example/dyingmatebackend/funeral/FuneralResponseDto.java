@@ -13,11 +13,11 @@ public class FuneralResponseDto {
     String epitaph;
     String portrait_photo;
 
-    public static FuneralResponseDto toDto(Funeral funeral) {
+    public static FuneralResponseDto toDto(Funeral funeral, String imageUrl) {
         return FuneralResponseDto.builder()
                 .method(funeral.getMethod())
                 .epitaph(funeral.getEpitaph())
-                .portrait_photo(funeral.getPortrait_photo())
+                .portrait_photo(imageUrl)
                 .build();
     }
 }

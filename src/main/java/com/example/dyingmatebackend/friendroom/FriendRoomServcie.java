@@ -51,7 +51,7 @@ public class FriendRoomServcie {
     public FuneralResponseDto getFuneral(String email) {
         User user = userRepository.findByEmail(email).get();
         Funeral friendFuneral = funeralRepository.findByUserUserId(user.getUserId());
-        return FuneralResponseDto.toDto(friendFuneral);
+        return FuneralResponseDto.toDto(friendFuneral, "friendFuneralImageUrl"); // TODO: 친구방 장례방식 이미지 url 추가하기
     }
 
     public BucketlistResponseList getBucketlist(String email) {

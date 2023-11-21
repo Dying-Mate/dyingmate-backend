@@ -1,5 +1,6 @@
 package com.example.dyingmatebackend.funeral;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.example.dyingmatebackend.s3.S3Uploader;
 import com.example.dyingmatebackend.user.User;
 import com.example.dyingmatebackend.user.UserRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.net.URL;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class FuneralService {
     public final FuneralRepository funeralRepository;
     public final UserRepository userRepository;
     private final S3Uploader s3Uploader;
+    private final AmazonS3Client s3Client;
 
     // 장례방식 저장
     public String saveFuneral(String email, FuneralRequestDto funeralRequestDto) throws IOException {
@@ -30,7 +33,7 @@ public class FuneralService {
                 .user(user)
                 .build();
 
-        s3Uploader.uploadImage(funeralRequestDto.getPortrait_photo());
+        s3Uploader.uploadImage(user.getEmail(), "funeral", funeralRequestDto.getPortrait_photo());
 
         funeralRepository.save(funeral);
         return "장례준비 저장";
@@ -38,8 +41,13 @@ public class FuneralService {
 
     // 장례방식 조회
     public FuneralResponseDto getFuneral(Long userId) {
+        User user = userRepository.findById(userId).get();
         Funeral funeral = funeralRepository.findByUserUserId(userId);
-        return FuneralResponseDto.toDto(funeral);
+
+        String path = user.getEmail() + "-funeral-" + funeral.getPortrait_photo();
+        URL url = s3Client.getUrl("dying-mate-server.link", path);
+
+        return FuneralResponseDto.toDto(funeral, url.toString());
     }
 
     // 장례방식 수정
@@ -47,6 +55,6 @@ public class FuneralService {
     public FuneralResponseDto modifyFuneral(Long userId, FuneralRequestDto funeralRequestDto) {
         Funeral funeral = funeralRepository.findByUserUserId(userId);
         funeral.updateFuneral(funeralRequestDto);
-        return FuneralResponseDto.toDto(funeral);
+        return FuneralResponseDto.toDto(funeral, "modifyFuneralUrl");
     }
 }
