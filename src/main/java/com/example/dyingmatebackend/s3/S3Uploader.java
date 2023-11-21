@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -22,8 +21,8 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadImage(MultipartFile file) throws IOException { // 이미지 S3에 업로드하고 이미지 url 반환
-        String s3FileName = UUID.randomUUID() + "-" + file.getOriginalFilename(); // image 이름 중복 방지를 위해 랜덤으로 생성
+    public String uploadImage(String userEmail, String type, MultipartFile file) throws IOException { // 이미지 S3에 업로드하고 이미지 url 반환
+        String s3FileName = userEmail + "-" + type + "-" + file.getOriginalFilename();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType()); // 이미지 외 다른 파일 받을 시 파일 형식에 맞게 변환
