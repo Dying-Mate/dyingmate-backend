@@ -29,7 +29,7 @@ public class BucketlistService {
     public String addFileMemo(String email, FileRequest fileRequest) throws IOException {
         User user = userRepository.findByEmail(email).get();
         bucketlistRepository.save(fileRequest.toEntity(user));
-        s3Uploader.uploadImage(fileRequest.getPhoto());
+        s3Uploader.uploadImage(user.getEmail(), "bucketlist", fileRequest.getPhoto());
         return "버킷리스트 파일 데이터 추가";
     }
 
