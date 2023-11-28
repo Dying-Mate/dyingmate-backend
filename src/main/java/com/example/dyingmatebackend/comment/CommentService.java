@@ -4,9 +4,7 @@ import com.example.dyingmatebackend.user.User;
 import com.example.dyingmatebackend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +16,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final HeartRepository heartRepository;
 
     // 댓글 등록
     public String registerComment(Long userId, CommentRequestDto commentRequestDto) {
@@ -33,7 +32,7 @@ public class CommentService {
     }
 
     // 댓글 조회
-    public List<CommentResponseDto> getComments() {
+    public List<CommentResponseDto> getComments(Long userId) {
         List<Comment> all = commentRepository.findAll();
 
         List<CommentResponseDto> commentList = new ArrayList<>();
@@ -43,19 +42,16 @@ public class CommentService {
 
         Collections.sort(all, comparator.reversed());
 
+        User user = userRepository.findById(userId).get();
+
         for (Comment comment : all) {
-            commentList.add(CommentResponseDto.of(comment));
+            boolean isPush;
+            if (heartRepository.existsByUserAndComment(user, comment)) isPush = true;
+            else isPush = false;
+
+            commentList.add(CommentResponseDto.of(comment, isPush));
         }
 
         return commentList;
-    }
-
-    // 좋아요 수 추가
-    @Transactional
-    public String addLikeNum(Long userId, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).get();
-        comment.increaseLikeNum();
-
-        return "좋아요 수 추가";
     }
 }

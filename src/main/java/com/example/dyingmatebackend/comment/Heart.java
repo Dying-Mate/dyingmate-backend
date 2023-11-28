@@ -6,38 +6,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.util.Date;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "comment")
-public class Comment {
+@Table(name = "heart")
+public class Heart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
-
-    private String content;
-
-    @CreationTimestamp
-    private Date creation_date;
-
-    private int likeNum;
+    private Long heartId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void increaseLikeNum() {
-        this.likeNum++;
-    }
-
-    public void decreaseLikeNum() {
-        this.likeNum--;
-    }
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 }

@@ -26,13 +26,7 @@ public class CommentController {
     @Operation(summary = "댓글 조회")
     @GetMapping("")
     public ApiResponse<?> getComments() {
-        return ApiResponse.ok(commentService.getComments());
-    }
-
-    @Operation(summary = "좋아요 수 추가")
-    @PatchMapping("/like")
-    public ApiResponse<?> addLikeNum(@RequestParam Long commentId) {
         Long userId = jwtAuthenticationProvider.getUserId();
-        return ApiResponse.ok(commentService.addLikeNum(userId, commentId));
+        return ApiResponse.ok(commentService.getComments(userId));
     }
 }
