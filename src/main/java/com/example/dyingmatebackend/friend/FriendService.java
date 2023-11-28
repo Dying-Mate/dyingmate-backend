@@ -155,8 +155,9 @@ public class FriendService {
 
     // 친구 취소
     @Transactional
-    public String refuseFriend(String refuseEmail) {
-        friendRequestRepository.deleteBySenderEmail(refuseEmail);
+    public String refuseFriend(String refuseEmail, Long userId) {
+        User user = userRepository.findById(userId).get();
+        friendRequestRepository.deleteBySenderEmailAndReceiverEmail(refuseEmail, user.getEmail());
 
         return refuseEmail + " 친구 거부";
     }

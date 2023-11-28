@@ -51,6 +51,7 @@ public class FriendController {
     @Operation(summary = "친구 거절")
     @DeleteMapping("/refuse")
     public ApiResponse<?> refuseFriend(@RequestParam String refuseEmail) {
-        return ApiResponse.ok(friendService.refuseFriend(refuseEmail));
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(friendService.refuseFriend(refuseEmail, userId));
     }
 }
