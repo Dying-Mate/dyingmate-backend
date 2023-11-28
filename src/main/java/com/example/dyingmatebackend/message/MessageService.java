@@ -39,4 +39,11 @@ public class MessageService {
         message.updateMessage(messageRequestDto.getMessage());
         return MessageResponseDto.toDto(message);
     }
+
+    // 부고문자 삭제
+    @Transactional
+    public String deleteMessage(Long userId) {
+        messageRepository.deleteByUserUserId(userId);
+        return "부고문자 삭제";
+    }
 }

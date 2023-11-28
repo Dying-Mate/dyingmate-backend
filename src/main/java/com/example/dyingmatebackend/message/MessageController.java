@@ -36,4 +36,11 @@ public class MessageController {
         Long userId = jwtAuthenticationProvider.getUserId();
         return ApiResponse.ok(messageService.modifyMessage(userId, messageRequestDto));
     }
+
+    @Operation(summary = "부고문자 삭제")
+    @DeleteMapping("/delete")
+    public ApiResponse<?> deleteMessage() {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(messageService.deleteMessage(userId));
+    }
 }
