@@ -1,5 +1,6 @@
 package com.example.dyingmatebackend.bucketlist;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.example.dyingmatebackend.bucketlist.dto.req.ContentRequest;
 import com.example.dyingmatebackend.bucketlist.dto.req.FileRequest;
 import com.example.dyingmatebackend.bucketlist.dto.req.TitleRequest;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ public class BucketlistService {
     private final BucketlistRepository bucketlistRepository;
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
+    private final AmazonS3Client s3Client;
 
     // 버킷리스트 추가 (form-data)
     public String addFileMemo(String email, FileRequest fileRequest) throws IOException {
@@ -49,12 +53,24 @@ public class BucketlistService {
 
     // 버킷리스트 조회
     public BucketlistResponseList getMemos(Long userId) {
+        User user = userRepository.findById(userId).get();
+
         List<Bucketlist> bucketlists = bucketlistRepository.findByUserUserId(userId);
 
-        List<FileResponse> fileResponseList = bucketlists.stream()
-                .filter(memo -> memo.getTitle() == null)
-                .map(FileResponse::of)
-                .collect(Collectors.toList());
+        String path = user.getEmail() + "-bucketlist-";
+        String imageUrl;
+
+        List<FileResponse> fileResponseList = new ArrayList<>();
+        for (Bucketlist bucketlist : bucketlists) {
+            if (bucketlist.getTitle() == null) {
+                if (bucketlist.getPhoto() == null) imageUrl = null;
+                else {
+                    URL url = s3Client.getUrl("dying-mate-server.link", path + bucketlist.getPhoto());
+                    imageUrl = url.toString();
+                }
+                fileResponseList.add(FileResponse.of(bucketlist, imageUrl));
+            }
+        }
 
         List<TitleResponse> titleResponseList = bucketlists.stream()
                 .filter(memo -> memo.getTitle() != null)

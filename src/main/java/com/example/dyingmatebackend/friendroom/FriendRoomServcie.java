@@ -19,6 +19,7 @@ import com.example.dyingmatebackend.will.WillResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,10 +59,11 @@ public class FriendRoomServcie {
         User user = userRepository.findByEmail(email).get();
         List<Bucketlist> bucketlists = bucketlistRepository.findByUserUserId(user.getUserId());
 
-        List<FileResponse> fileResponseList = bucketlists.stream()
-                .filter(memo -> memo.getTitle() == null)
-                .map(FileResponse::of)
-                .collect(Collectors.toList());
+        List<FileResponse> fileResponseList = new ArrayList<>();
+//        List<FileResponse> fileResponseList = bucketlists.stream()
+//                .filter(memo -> memo.getTitle() == null)
+//                .map(FileResponse::of)
+//                .collect(Collectors.toList());
 
         List<TitleResponse> titleResponseList = bucketlists.stream()
                 .filter(memo -> memo.getTitle() != null)
