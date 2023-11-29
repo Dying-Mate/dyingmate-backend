@@ -6,6 +6,7 @@ import com.example.dyingmatebackend.bucketlist.dto.req.FileRequest;
 import com.example.dyingmatebackend.bucketlist.dto.req.TitleRequest;
 import com.example.dyingmatebackend.bucketlist.dto.res.BucketlistResponseList;
 import com.example.dyingmatebackend.bucketlist.dto.res.FileResponse;
+import com.example.dyingmatebackend.bucketlist.dto.res.MoveLocationResponse;
 import com.example.dyingmatebackend.bucketlist.dto.res.TitleResponse;
 import com.example.dyingmatebackend.s3.S3Uploader;
 import com.example.dyingmatebackend.user.User;
@@ -90,10 +91,14 @@ public class BucketlistService {
 
     // 버킷리스트 이동
     @Transactional
-    public String moveMemo(Long bucketlistId, double x, double y) {
+    public MoveLocationResponse moveMemo(Long bucketlistId, double x, double y) {
         Bucketlist bucketlist = bucketlistRepository.findById(bucketlistId).get();
         bucketlist.updateXY(x, y);
-        return "버킷리스트 이동 완료";
+        return MoveLocationResponse.builder()
+                .bucketlistId(bucketlist.getBucketlistId())
+                .memoX(bucketlist.getMemoX())
+                .memoY(bucketlist.getMemoY())
+                .build();
     }
 
     public String deleteMemo(Long bucketlistId) {
