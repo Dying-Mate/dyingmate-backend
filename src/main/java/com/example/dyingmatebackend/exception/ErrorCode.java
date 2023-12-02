@@ -13,7 +13,11 @@ public enum ErrorCode {
     ALREADY_REQUEST_FRIEND(HttpStatus.BAD_REQUEST, "이미 친구 요청하였습니다."),
     ALREADY_ADD_FRIEND(HttpStatus.BAD_REQUEST, "이미 친구 추가하였습니다."),
     ALREADY_PUSH_HEART(HttpStatus.BAD_REQUEST, "이미 좋아요를 눌렀습니다."),
-    NOT_PUSH_HEART(HttpStatus.BAD_REQUEST, "좋아요를 누르지 않았습니다.");
+    NOT_PUSH_HEART(HttpStatus.BAD_REQUEST, "좋아요를 누르지 않았습니다."),
+    FRIEND_WILL_NULL(HttpStatus.NO_CONTENT, "친구가 아직 유언장을 기록하지 않았습니다."),
+    FRIEND_MESSAGE_NULL(HttpStatus.NO_CONTENT, "친구가 아직 부고문자를 기록하지 않았습니다."),
+    FRIEND_FUNERAL_NULL(HttpStatus.NO_CONTENT, "친구가 아직 장례방식을 기록하지 않았습니다."),
+    FRIEND_BUCKETLIST_NULL(HttpStatus.NO_CONTENT, "친구가 아직 버킷리스트를 기록하지 않았습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
