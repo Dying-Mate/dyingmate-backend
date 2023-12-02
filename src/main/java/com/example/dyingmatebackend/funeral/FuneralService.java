@@ -52,9 +52,18 @@ public class FuneralService {
 
     // 장례방식 수정
     @Transactional
-    public FuneralResponseDto modifyFuneral(Long userId, FuneralRequestDto funeralRequestDto) {
+    public FuneralResponseDto modifyFuneral(Long userId, FuneralRequestDto funeralRequestDto) throws IOException {
+        User user = userRepository.findById(userId).get();
         Funeral funeral = funeralRepository.findByUserUserId(userId);
+
+        String deleteImg = user.getEmail() + "-funeral-" + funeral.getPortrait_photo();
+        s3Uploader.deleteImage(deleteImg);
+
+        s3Uploader.uploadImage(user.getEmail(), "funeral", funeralRequestDto.getPortrait_photo());
         funeral.updateFuneral(funeralRequestDto);
-        return FuneralResponseDto.toDto(funeral, "modifyFuneralUrl");
+
+        String path = user.getEmail() + "-funeral-" + funeral.getPortrait_photo();
+        URL url = s3Client.getUrl("dying-mate-server.link", path);
+        return FuneralResponseDto.toDto(funeral, url.toString());
     }
 }

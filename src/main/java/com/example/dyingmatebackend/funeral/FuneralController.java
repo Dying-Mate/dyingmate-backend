@@ -36,7 +36,7 @@ public class FuneralController {
 
     @Operation(summary = "장례방식 수정")
     @PatchMapping("/modify")
-    public ApiResponse<?> modifyFuneral(@ModelAttribute FuneralRequestDto funeralRequestDto) {
+    public ApiResponse<?> modifyFuneral(@ModelAttribute FuneralRequestDto funeralRequestDto) throws IOException {
         Long userId = jwtAuthenticationProvider.getUserId();
         return ApiResponse.ok(funeralService.modifyFuneral(userId, funeralRequestDto));
     }
