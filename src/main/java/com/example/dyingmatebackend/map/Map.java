@@ -21,6 +21,7 @@ public class Map {
     @Builder.Default private boolean stage2 = false;
     @Builder.Default private boolean stage3 = false;
     @Builder.Default private boolean stage4 = false;
+    @Builder.Default private boolean stage5 = false;
 
     @OneToOne
     @JoinColumn(name = "user_id")

@@ -16,6 +16,7 @@ public class MapDto {
     private boolean stage2;
     private boolean stage3;
     private boolean stage4;
+    private boolean stage5;
 
     public static MapDto of(Map map) {
         return MapDto.builder()
@@ -23,6 +24,7 @@ public class MapDto {
                 .stage2(map.isStage2())
                 .stage3(map.isStage3())
                 .stage4(map.isStage4())
+                .stage5(map.isStage5())
                 .build();
     }
 }
