@@ -1,10 +1,12 @@
 package com.example.dyingmatebackend.user;
 
+import com.example.dyingmatebackend.client.GoogleClient;
 import com.example.dyingmatebackend.client.KakaoClient;
 import com.example.dyingmatebackend.jwt.JwtAuthenticationProvider;
 import com.example.dyingmatebackend.map.Map;
 import com.example.dyingmatebackend.map.MapRepository;
 import com.example.dyingmatebackend.user.dto.LoginResponse;
+import com.example.dyingmatebackend.user.params.GoogleInfoResponse;
 import com.example.dyingmatebackend.user.params.KakaoInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.Random;
 public class OAuthService {
 
     private final KakaoClient kakaoClient;
+    private final GoogleClient googleClient;
     private final UserRepository userRepository;
     private final MapRepository mapRepository;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
@@ -24,7 +27,7 @@ public class OAuthService {
         String accessToken = kakaoClient.requestAccessToken(authorizationCode);
         KakaoInfoResponse info = kakaoClient.requestKakaoInfo(accessToken);
 
-        Long userId = findOrCreateMember(info);
+        Long userId = findOrCreateMember(info.getProperties().getNickname());
         User user = userRepository.findById(userId).get();
 
         LoginResponse response = LoginResponse.builder()
@@ -39,17 +42,36 @@ public class OAuthService {
         return response;
     }
 
-    private Long findOrCreateMember(KakaoInfoResponse info) {
-        return userRepository.findByEmail(info.getProperties().getNickname())
-                .map(User::getUserId)
-                .orElseGet(() -> newMember(info));
+    public LoginResponse loginGoogle(String authorizationCode) {
+        String accessToken = googleClient.requestAccessToken(authorizationCode);
+        GoogleInfoResponse info = googleClient.requestGoogleInfo(accessToken);
+
+        Long userId = findOrCreateMember(info.getEmail());
+        User user = userRepository.findById(userId).get();
+
+        LoginResponse response = LoginResponse.builder()
+                .id(userId)
+                .name(user.getName())
+                .email(user.getEmail())
+                .photoNum(user.getPhotoNum())
+                .accessToken(jwtAuthenticationProvider.createAccessToken(userId, info.getName()))
+                .refreshToken(jwtAuthenticationProvider.createRefreshToken(userId, info.getName()))
+                .build();
+
+        return response;
     }
 
-    private Long newMember(KakaoInfoResponse info) {
+    private Long findOrCreateMember(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::getUserId)
+                .orElseGet(() -> newMember(email));
+    }
+
+    private Long newMember(String email) {
         Random random = new Random();
 
         User user = User.builder()
-                .email(info.getProperties().getNickname())
+                .email(email)
                 .photoNum(random.nextInt(3))
                 .build();
 

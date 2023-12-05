@@ -56,6 +56,12 @@ public class UserController {
         return ApiResponse.ok(oAuthService.loginKakao(authorizationCode));
     }
 
+    @Operation(summary = "구글 로그인")
+    @PostMapping("/google")
+    public ApiResponse<LoginResponse> loginGoogle(@RequestParam("code") String authorizationCode) {
+        return ApiResponse.ok(oAuthService.loginGoogle(authorizationCode));
+    }
+
     @Operation(summary = "초기화")
     @DeleteMapping("/reset")
     public ApiResponse<?> resetUser() {
