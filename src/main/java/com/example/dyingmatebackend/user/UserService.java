@@ -13,8 +13,11 @@ import com.example.dyingmatebackend.map.MapRepository;
 import com.example.dyingmatebackend.map.MapService;
 import com.example.dyingmatebackend.message.MessageRepository;
 import com.example.dyingmatebackend.user.dto.LoginResponse;
+import com.example.dyingmatebackend.user.dto.UserInformResponse;
 import com.example.dyingmatebackend.will.WillRepository;
 import lombok.RequiredArgsConstructor;
+//import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,7 @@ public class UserService {
     private final MapRepository mapRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+//    private final RedisTemplate<String, String> redisTemplate;
 
     private final WillRepository willRepository;
     private final MessageRepository messageRepository;
@@ -72,6 +76,9 @@ public class UserService {
         if (passwordEncoder.matches(userRequestDto.getPwd(), user.getPwd())) { // 비밀번호가 일치할 때
             String accessToken = jwtAuthenticationProvider.createAccessToken(user.getUserId(), user.getEmail());
             String refreshToken = jwtAuthenticationProvider.createRefreshToken(user.getUserId(), user.getEmail());
+
+            // 로그아웃 구분하기 위해 Redis에 저장 (Key: userId, Value: token)
+//            redisTemplate.opsForValue().set("JWT_TOKEN: " + user.getEmail(), accessToken);
 
             LoginResponse response = LoginResponse.builder()
                     .id(user.getUserId())
@@ -119,5 +126,27 @@ public class UserService {
         friendListRepository.deleteByUserUserId(userId);
         friendListRepository.deleteByFriendEmail(user.getEmail());
         return "초기화 완료";
+    }
+
+    // 로그아웃
+    @Transactional
+    public String logoout(Long userId) {
+//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//        if (redisTemplate.opsForValue().get("JWT_TOKEN: " + user.getUserId()) != null) {
+//            redisTemplate.delete("JWT_TOKEN: " + user.getUserId()); // token 삭제
+//        }
+
+        return "로그아웃";
+    }
+
+    // 사용자 정보 반환
+    public UserInformResponse getInform(Long userId) {
+        User user = userRepository.findById(userId).get();
+
+        return UserInformResponse.builder()
+                .name(user.getName())
+                .photoNum(user.getPhotoNum())
+                .build();
     }
 }

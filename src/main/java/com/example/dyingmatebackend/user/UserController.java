@@ -50,6 +50,13 @@ public class UserController {
         return ApiResponse.ok(userService.modifyName(userId, name));
     }
 
+    @Operation(summary = "사용자 정보 반환")
+    @GetMapping("")
+    public ApiResponse<?> getInform() {
+        Long userId = jwtAuthenticationProvider.getUserId();
+        return ApiResponse.ok(userService.getInform(userId));
+    }
+
     @Operation(summary = "카카오 로그인")
     @PostMapping("/kakao")
     public ApiResponse<LoginResponse> loginKakao(@RequestParam("code") String authorizationCode) {
