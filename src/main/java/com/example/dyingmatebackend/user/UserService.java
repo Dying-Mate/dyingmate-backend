@@ -118,7 +118,7 @@ public class UserService {
         funeralRepository.deleteByUserUserId(userId);
         bucketlistRepository.deleteByUserUserId(userId);
         commentRepository.deleteByUserUserId(userId);
-        mapService.resetMap(userId);
+        // mapService.resetMap(userId);
 
         User user = userRepository.findById(userId).get();
         friendRequestRepository.deleteBySenderEmail(user.getEmail());
